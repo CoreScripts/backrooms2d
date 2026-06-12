@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Backrooms 2D</title>
+    <style>
+        body { margin: 0; padding: 0; background: black; }
+        canvas { display: block; margin: auto; }
+    </style>
+</head>
+<body>
+    <canvas id="unity-canvas"></canvas>
+    <script src="7-21-23.loader.js"></script>
+    <script>
+        var canvas = document.querySelector("#unity-canvas");
+        var script = document.createElement("script");
+        script.src = "7-21-23.framework.js";
+        script.onload = () => {
+            createUnityInstance(canvas, {
+                dataUrl: "7-21-23.data",
+                frameworkUrl: "7-21-23.framework.js",
+                codeUrl: "7-21-23.wasm",
+            });
+        };
+        document.body.appendChild(script);
+    </script>
+</body>
+</html>
