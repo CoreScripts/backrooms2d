@@ -11,13 +11,13 @@
       width: 100vw;
       height: 100vh;
       overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
     #canvas {
       display: block;
-      /* JS will set width/height as px values */
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
     #loading {
       position: fixed;
@@ -58,11 +58,19 @@
 
     function resizeCanvas() {
       var scale = Math.min(window.innerWidth / GAME_W, window.innerHeight / GAME_H);
-      canvas.style.width  = Math.floor(GAME_W * scale) + "px";
-      canvas.style.height = Math.floor(GAME_H * scale) + "px";
+      var w = Math.floor(GAME_W * scale);
+      var h = Math.floor(GAME_H * scale);
+      canvas.style.width  = w + "px";
+      canvas.style.height = h + "px";
+      // Keep transform centering intact regardless of Unity attribute changes
+      canvas.style.transform = "translate(-50%, -50%)";
     }
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
+
+    // MutationObserver to re-apply scale if Unity overwrites style
+    var observer = new MutationObserver(resizeCanvas);
+    observer.observe(canvas, { attributes: true, attributeFilter: ["style", "width", "height"] });
   </script>
 
   <script src="7-21-23.loader.js"></script>
@@ -77,7 +85,6 @@
       productVersion: ""
     }).then(function() {
       loading.style.display = "none";
-      resizeCanvas(); // re-apply scale after Unity may have touched the canvas
     }).catch(function(err) {
       loading.innerHTML = "Error loading game";
       console.error(err);
